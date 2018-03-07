@@ -1,0 +1,49 @@
+html, body, #root {
+  height: 100%;
+}
+.App {
+  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.App-logo {
+  height: 80px;
+}
+
+.App-header {
+  background-color: #eee;
+  padding: 10px;
+  /* height: 150px; */
+  /* background-color: #222; */
+  /* color: white; */
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+.Launch-link {
+  color: black;
+  text-decoration: none;
+  display: flex;
+}
+
+
+.loading-animation {
+  animation: 1.25s loading infinite alternate;
+}
+
+@keyframes loading {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
