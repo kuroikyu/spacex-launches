@@ -1,57 +1,48 @@
-/* eslint react/no-did-mount-set-state: 0 */
+/* eslint jsx-a11y/anchor-is-valid: 0 */
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
+import ArrowLeft from 'react-feather/dist/icons/arrow-left';
 
 import { Poster } from './Launch';
+import { TrueOrFalse, Loading } from './helpers';
 
 // other data like images and json files
 import spacexLogo from './data/spacexlogo.png';
-import headerImg from './data/spacexrocket.jpg';
+import headerImg from './data/detailsHeader.jpg';
 
 const transitionMs = '0.15s';
 const transitionFunc = 'ease';
 
-const PosterDetail = Poster.extend`
-  height: 200px;
-  width: auto;
-  filter: drop-shadow(0 4px 6px rgba(32, 63, 64, 0.2));
-  will-change: filter, transform;
-  transition: all ${transitionMs} ${transitionFunc};
-  &:hover {
-    transform: translateY(-1px);
-    filter: drop-shadow(0 7px 10px rgba(32, 63, 64, 0.2));
-  }
-`;
+const LiPropTypes = {
+  name: PropTypes.string.isRequired,
+  value: PropTypes.oneOf([PropTypes.string, PropTypes.node]).isRequired,
+};
 
-const Loading = ({ className }) => (
-  <h3 className={className}>
-    <span className="loading-animation">Loading</span>
-  </h3>
+const ListedItem = ({ name, value }) => (
+  <Li>
+    <span>{name}</span>
+    <span>{value}</span>
+  </Li>
 );
 
-Loading.propTypes = {
-  className: PropTypes.string,
-};
+const ListedAnchor = ({ name, value }) => (
+  <Li>
+    <span>{name}</span>
+    <span>
+      {value && (
+        <a href={value} target="_blank" rel="nofollow">
+          Link
+        </a>
+      )}
+    </span>
+  </Li>
+);
 
-Loading.defaultProps = {
-  className: '',
-};
-
-const LoadingStyled = styled(Loading)`
-  margin: 0;
-  height: 100%;
-  position: relative;
-  > span {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-`;
-
-const TrueOrFalse = val => (val ? <span>&#x2713; Yes</span> : <span>&times; No</span>);
+ListedItem.propTypes = LiPropTypes;
+ListedAnchor.propTypes = LiPropTypes;
 
 class LaunchDetail extends PureComponent {
   static propTypes = {
@@ -66,7 +57,6 @@ class LaunchDetail extends PureComponent {
 
   async componentWillMount() {
     const { params } = this.props.match;
-    // const launch = this.props.location.launch || (await this.APIFallback());
     const launch =
       this.props.launches.filter(el => el.flight_number === parseInt(params.launchId, 10))[0] ||
       (await this.APIFallback());
@@ -86,7 +76,6 @@ class LaunchDetail extends PureComponent {
   }
 
   render() {
-    // const headerImg = 'http://www.spacex.com/sites/spacex/files/styles/new_gallery_large/public/2016_-_06_crs8_landed2.jpg?itok=w4ndFkxW';
     if (this.state.launch) {
       const { launch } = this.state;
       const image = launch.links.mission_patch || spacexLogo;
@@ -97,6 +86,10 @@ class LaunchDetail extends PureComponent {
 
       return (
         <LaunchWrapper backdrop={headerImg}>
+          <Backdrop />
+          <BackLink to="/">
+            <ArrowLeft size="40" />
+          </BackLink>
           <LaunchInfo>
             <PosterDetail src={image} alt={rocketName} />
             <DetailsWrapper>
@@ -105,206 +98,62 @@ class LaunchDetail extends PureComponent {
 
               <SecondaryHeader>Launch</SecondaryHeader>
               <DetailsSection>
-                <Li>
-                  <span>No.</span>
-                  <span>{launch.flight_number}</span>
-                </Li>
-                <Li>
-                  <span>Success</span>
-                  <span>{TrueOrFalse(launch.launch_success)}</span>
-                </Li>
-                <Li>
-                  <span>Date</span>
-                  <span>{launchDate}</span>
-                </Li>
-                <Li>
-                  <span>Site</span>
-                  <span>{launch.launch_site.site_name_long}</span>
-                </Li>
+                <ListedItem name="No." value={launch.flight_number} />
+                <ListedItem name="Success" value={TrueOrFalse(launch.launch_success)} />
+                <ListedItem name="Date" value={launchDate} />
+                <ListedItem name="Site" value={launch.launch_site.site_name_long} />
               </DetailsSection>
 
               <SecondaryHeader>Rocket</SecondaryHeader>
               <DetailsSection>
-                <Li>
-                  <span>Name</span>
-                  <span>{launch.rocket.rocket_name}</span>
-                </Li>
-                <Li>
-                  <span>Type</span>
-                  <span>{launch.rocket.rocket_type}</span>
-                </Li>
+                <ListedItem name="Name" value={launch.rocket.rocket_name} />
+                <ListedItem name="Type" value={launch.rocket.rocket_type} />
 
                 <SecondaryHeader>First Stage</SecondaryHeader>
                 {launch.rocket.first_stage.cores.map(stage => (
                   <DetailsSection key={stage.core_serial}>
-                    <Li>
-                      <span>Core Serial</span>
-                      <span>{stage.core_serial}</span>
-                    </Li>
-                    <Li>
-                      <span>Flights</span>
-                      <span>{stage.flight}</span>
-                    </Li>
-                    <Li>
-                      <span>Block</span>
-                      <span>{stage.block}</span>
-                    </Li>
-                    <Li>
-                      <span>Reused</span>
-                      <span>{TrueOrFalse(stage.reused)}</span>
-                    </Li>
-                    <Li>
-                      <span>Land Success</span>
-                      <span>{TrueOrFalse(stage.landing_success)}</span>
-                    </Li>
-                    <Li>
-                      <span>Landing Type</span>
-                      <span>{stage.landing_type}</span>
-                    </Li>
-                    <Li>
-                      <span>Landing Vehicle</span>
-                      <span>{stage.landing_vehicle}</span>
-                    </Li>
+                    <ListedItem name="Core Serial" value={stage.core_serial} />
+                    <ListedItem name="Flights" value={stage.flight} />
+                    <ListedItem name="Block" value={stage.block} />
+                    <ListedItem name="Reused" value={TrueOrFalse(stage.reused)} />
+                    <ListedItem name="Land Success" value={TrueOrFalse(stage.landing_success)} />
+                    <ListedItem name="Landing Type" value={stage.landing_type} />
+                    <ListedItem name="Landing Vehicle" value={stage.landing_vehicle} />
                   </DetailsSection>
                 ))}
 
                 <SecondaryHeader>Second Stage</SecondaryHeader>
                 {launch.rocket.second_stage.payloads.map(payload => (
                   <DetailsSection key={payload.payload_id}>
-                    <Li>
-                      <span>Payload ID</span>
-                      <span>{payload.payload_id}</span>
-                    </Li>
-                    <Li>
-                      <span>Reused</span>
-                      <span>{TrueOrFalse(payload.reused)}</span>
-                    </Li>
-                    <Li>
-                      <span>Customers</span>
-                      <span>{payload.customers.toString()}</span>
-                    </Li>
-                    <Li>
-                      <span>Type</span>
-                      <span>{payload.payload_type}</span>
-                    </Li>
-                    <Li>
-                      <span>Mass In KG</span>
-                      <span>{payload.payload_mass_kg}</span>
-                    </Li>
-                    <Li>
-                      <span>Orbit</span>
-                      <span>{payload.orbit}</span>
-                    </Li>
+                    <ListedItem name="Payload ID" value={payload.payload_id} />
+                    <ListedItem name="Reused" value={TrueOrFalse(payload.reused)} />
+                    <ListedItem name="Customers" value={payload.customers.toString()} />
+                    <ListedItem name="Type" value={payload.payload_type} />
+                    <ListedItem name="Mass In KG" value={payload.payload_mass_kg} />
+                    <ListedItem name="Orbit" value={payload.orbit} />
                   </DetailsSection>
                 ))}
               </DetailsSection>
 
               <SecondaryHeader>Reused</SecondaryHeader>
               <DetailsSection>
-                <Li>
-                  <span>Capsule</span>
-                  <span>{TrueOrFalse(launch.reuse.capsule)}</span>
-                </Li>
-                <Li>
-                  <span>Core</span>
-                  <span>{TrueOrFalse(launch.reuse.core)}</span>
-                </Li>
-                <Li>
-                  <span>Fairings</span>
-                  <span>{TrueOrFalse(launch.reuse.fairings)}</span>
-                </Li>
-                <Li>
-                  <span>Side Core 1</span>
-                  <span>{TrueOrFalse(launch.reuse.side_core1)}</span>
-                </Li>
-                <Li>
-                  <span>Side Core 2</span>
-                  <span>{TrueOrFalse(launch.reuse.side_core2)}</span>
-                </Li>
+                <ListedItem name="Capsule" value={TrueOrFalse(launch.reuse.capsule)} />
+                <ListedItem name="Core" value={TrueOrFalse(launch.reuse.core)} />
+                <ListedItem name="Fairings" value={TrueOrFalse(launch.reuse.fairings)} />
+                <ListedItem name="Side Core 1" value={TrueOrFalse(launch.reuse.side_core1)} />
+                <ListedItem name="Side Core 2" value={TrueOrFalse(launch.reuse.side_core2)} />
               </DetailsSection>
 
               <SecondaryHeader>Links</SecondaryHeader>
               <DetailsSection>
-                <Li>
-                  <span>Article</span>
-                  <span>
-                    {launch.links.article_link && (
-                      <a href={launch.links.article_link} target="_blank" rel="nofollow">
-                        Link
-                      </a>
-                    )}
-                  </span>
-                </Li>
-                <Li>
-                  <span>Presskit</span>
-                  <span>
-                    {launch.links.presskit && (
-                      <a href={launch.links.presskit} target="_blank" rel="nofollow">
-                        Link
-                      </a>
-                    )}
-                  </span>
-                </Li>
-                <Li>
-                  <span>Reddit Campaign</span>
-                  <span>
-                    {launch.links.reddit_campaign && (
-                      <a href={launch.links.reddit_campaign} target="_blank" rel="nofollow">
-                        Link
-                      </a>
-                    )}
-                  </span>
-                </Li>
-                <Li>
-                  <span>Reddit Launch</span>
-                  <span>
-                    {launch.links.reddit_launch && (
-                      <a href={launch.links.reddit_launch} target="_blank" rel="nofollow">
-                        Link
-                      </a>
-                    )}
-                  </span>
-                </Li>
-                <Li>
-                  <span>Reddit Media</span>
-                  <span>
-                    {launch.links.reddit_media && (
-                      <a href={launch.links.reddit_media} target="_blank" rel="nofollow">
-                        Link
-                      </a>
-                    )}
-                  </span>
-                </Li>
-                <Li>
-                  <span>Reddit Recovery</span>
-                  <span>
-                    {launch.links.reddit_recovery && (
-                      <a href={launch.links.reddit_recovery} target="_blank" rel="nofollow">
-                        Link
-                      </a>
-                    )}
-                  </span>
-                </Li>
-                <Li>
-                  <span>Video</span>
-                  <span>
-                    {launch.links.video_link && (
-                      <a href={launch.links.video_link} target="_blank" rel="nofollow">
-                        Link
-                      </a>
-                    )}
-                  </span>
-                </Li>
-                <Li>
-                  <span>Telemetry</span>
-                  <span>
-                    {launch.telemetry.flight_club && (
-                      <a href={launch.telemetry.flight_club} target="_blank" rel="nofollow">
-                        Link
-                      </a>
-                    )}
-                  </span>
-                </Li>
+                <ListedAnchor name="Article" value={launch.links.article_link} />
+                <ListedAnchor name="Presskit" value={launch.links.presskit} />
+                <ListedAnchor name="Reddit Campaign" value={launch.links.reddit_campaign} />
+                <ListedAnchor name="Reddit Launch" value={launch.links.reddit_launch} />
+                <ListedAnchor name="Reddit Media" value={launch.links.reddit_media} />
+                <ListedAnchor name="Reddit Recovery" value={launch.links.reddit_recovery} />
+                <ListedAnchor name="Video" value={launch.links.video_link} />
+                <ListedAnchor name="Telemetry" value={launch.telemetry.flight_club} />
               </DetailsSection>
             </DetailsWrapper>
           </LaunchInfo>
@@ -318,13 +167,59 @@ class LaunchDetail extends PureComponent {
 
 export default LaunchDetail;
 
+const PosterDetail = Poster.extend`
+  height: 200px;
+  width: auto;
+  filter: drop-shadow(0 4px 6px rgba(32, 63, 64, 0.2));
+  will-change: filter, transform;
+  transition: all ${transitionMs} ${transitionFunc};
+  &:hover {
+    transform: translateY(-1px);
+    filter: drop-shadow(0 7px 10px rgba(32, 63, 64, 0.2));
+  }
+`;
+
+const LoadingStyled = styled(Loading)`
+  margin: 0;
+  height: 100%;
+  position: relative;
+  > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+`;
+
 const LaunchWrapper = styled.div`
   font-size: 20px;
   position: relative;
-  padding-top: 300px;
-  background: URL(${props => props.backdrop}) no-repeat;
-  background-size: contain;
-  background-position: top center;
+  padding-top: 14em;
+`;
+
+const Backdrop = styled.div`
+  background: red;
+  background: URL(${headerImg}) no-repeat;
+  background-size: cover;
+  background-position: center bottom;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 15.5em;
+  width: 100%;
+  z-index: -1000;
+`;
+
+const BackLink = styled(Link)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0.25em;
+  padding: 0.5em;
+  font-size: 2em;
+  color: white;
+  text-decoration: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 `;
 
 const LaunchInfo = styled.div`
@@ -332,6 +227,7 @@ const LaunchInfo = styled.div`
   padding: 1.5em 15% 4em 15%;
   text-align: left;
   display: flex;
+  box-shadow: 0 -5px 10px 0 rgba(32, 63, 64, 0.2);
   img {
     position: relative;
     top: -5rem;
@@ -353,6 +249,7 @@ const MainHeader = styled.h1`
   color: #a6110f;
   font-size: 46px;
   margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 `;
 
 const DetailsSection = styled.ul`
@@ -391,6 +288,9 @@ const Li = styled.li`
 
   span:last-child {
     color: #203f40;
+    svg {
+      vertical-align: bottom;
+    }
   }
 
   span > a {
@@ -418,5 +318,5 @@ const Description = styled.p`
 const Footerino = styled.div`
   height: 4.5em;
   width: 100%;
-  background: #01a2a6;
+  background: #203f40;
 `;

@@ -53,11 +53,11 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <header className="App-header">
+          {/* <header className="App-header">
             <Link to="/">
               <img src={spacexlogo} className="App-logo" alt="SpaceX logo" />
             </Link>
-          </header>
+          </header> */}
           <Switch>
             <Route
               exact
