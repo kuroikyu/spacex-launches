@@ -1,11 +1,11 @@
 /* eslint jsx-a11y/anchor-is-valid: 0 */
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import 'normalize.css';
+import styled from 'styled-components';
 
 import Missions from './Missions';
 import LaunchDetail from './LaunchDetail';
-import spacexlogo from './data/spacexlogo.png';
 import './App.css';
 
 const futureLaunchesURI = 'https://api.spacexdata.com/v2/launches/upcoming';
@@ -52,31 +52,81 @@ class App extends Component {
 
     return (
       <Router>
-        <div className="App">
-          {/* <header className="App-header">
+        <MainContainer>
+          <AppWrapper className="App">
+            {/* <header className="App-header">
             <Link to="/">
               <img src={spacexlogo} className="App-logo" alt="SpaceX logo" />
             </Link>
           </header> */}
-          <Switch>
-            <Route
-              exact
-              path="/"
-              render={props => (
-                <Missions futureLaunches={futureLaunches} pastLaunches={pastLaunches} {...props} />
-              )}
-            />
-            <Route
-              path="/:folder/:launchId"
-              render={props => (
-                <LaunchDetail launches={[...futureLaunches, ...pastLaunches]} {...props} />
-              )}
-            />
-          </Switch>
-        </div>
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={props => (
+                  <Missions
+                    futureLaunches={futureLaunches}
+                    pastLaunches={pastLaunches}
+                    {...props}
+                  />
+                )}
+              />
+              <Route
+                path="/:folder/:launchId"
+                render={props => (
+                  <LaunchDetail launches={[...futureLaunches, ...pastLaunches]} {...props} />
+                )}
+              />
+            </Switch>
+          </AppWrapper>
+          <Footer>
+            <p>
+              All data and images are property of Space Exploration Technologies Corporation (
+              <a href="https://spacex.com" target="_blank" rel="noopener noreferrer">
+                SpaceX
+              </a>)
+            </p>
+            <p>
+              Made with love in 2018 by{' '}
+              <a href="https://kuroikyu.com" target="_blank" rel="noopener noreferrer">
+                Kuroi Kyu
+              </a>
+            </p>
+          </Footer>
+        </MainContainer>
       </Router>
     );
   }
 }
+
+const AppWrapper = styled.div`
+  background: var(--white);
+  margin-top: var(--wrapper-margin);
+  margin-bottom: 4.5em;
+  transition: margin 0.15s ease;
+  box-shadow: 0 3px 6px 0 rgba(32, 63, 64, 0.2);
+`;
+
+const Footer = styled.footer`
+  margin-bottom: 4.5em;
+  padding: 0 1em;
+  text-align: center;
+  font-family: 'Roboto Slab', serif;
+  color: var(--white);
+  a {
+    color: var(--white);
+    text-decoration: none;
+    box-shadow: 0 2px 0 var(--white);
+    transition: box-shadow 0.15s ease;
+    &:hover {
+      box-shadow: 0 4px 0 var(--white);
+    }
+  }
+`;
+
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export default App;

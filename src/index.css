@@ -1,7 +1,17 @@
 @import url("https://fonts.googleapis.com/css?family=Unica+One|Roboto+Slab");
+:root {
+  --teal: #01a2a6;
+  --red: #a70011;
+  --white: #f2f5f5;
+  --wrapper-margin: 6px;
+}
+
 body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background: #ccc;
+  background-color: var(--teal);
+  background: linear-gradient(90deg, #02a69b 0%, #0295a6 100%);
+  line-height: 1.5;
+  color: #203f40;
 }

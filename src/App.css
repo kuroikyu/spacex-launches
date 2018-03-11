@@ -1,9 +1,11 @@
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 .App {
   text-align: center;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
 }
@@ -33,7 +35,6 @@ html, body, #root {
   text-decoration: none;
   display: flex;
 }
-
 
 .loading-animation {
   animation: 1.25s loading infinite alternate;

@@ -6,11 +6,11 @@ import X from 'react-feather/dist/icons/x';
 function TrueOrFalse(val) {
   return val ? (
     <span>
-      <Check color="#01a2a6" /> Yes
+      <Check color="var(--teal)" /> Yes
     </span>
   ) : (
     <span>
-      <X color="#a6110f" /> No
+      <X color="var(--red)" /> No
     </span>
   );
 }

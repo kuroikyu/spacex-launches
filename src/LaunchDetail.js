@@ -11,14 +11,18 @@ import { TrueOrFalse, Loading } from './helpers';
 
 // other data like images and json files
 import spacexLogo from './data/spacexlogo.png';
-import headerImg from './data/detailsHeader.jpg';
 
 const transitionMs = '0.15s';
 const transitionFunc = 'ease';
+const wrapperHeight = '5'; // em
 
 const LiPropTypes = {
   name: PropTypes.string.isRequired,
-  value: PropTypes.oneOf([PropTypes.string, PropTypes.node]).isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+};
+
+const LiDefaultProps = {
+  value: '',
 };
 
 const ListedItem = ({ name, value }) => (
@@ -42,7 +46,9 @@ const ListedAnchor = ({ name, value }) => (
 );
 
 ListedItem.propTypes = LiPropTypes;
+ListedItem.defaultProps = LiDefaultProps;
 ListedAnchor.propTypes = LiPropTypes;
+ListedAnchor.defaultProps = LiDefaultProps;
 
 class LaunchDetail extends PureComponent {
   static propTypes = {
@@ -56,13 +62,36 @@ class LaunchDetail extends PureComponent {
   };
 
   async componentWillMount() {
+    // Scroll to the top
+    window.scroll(0, 0);
+
+    this.stretchWrapper();
+
+    document.documentElement.style.setProperty('--wrapper-margin', `${wrapperHeight}em`);
+
+    // Capture flight info from props or fetch it from API
     const { params } = this.props.match;
     const launch =
       this.props.launches.filter(el => el.flight_number === parseInt(params.launchId, 10))[0] ||
       (await this.APIFallback());
 
     this.setState({ launch });
-    console.log(launch);
+  }
+
+  componentWillUnmount() {
+    // Decrease wrapper's height
+    document.documentElement.style.setProperty('--wrapper-margin', this.state.originalMargin);
+  }
+
+  stretchWrapper() {
+    const dom = document.documentElement;
+
+    // Save original margin size
+    const originalMargin = getComputedStyle(dom).getPropertyValue('--wrapper-margin');
+    this.setState({ originalMargin });
+
+    // Increase wrapper's height
+    document.documentElement.style.setProperty('--wrapper-margin', wrapperHeight);
   }
 
   async APIFallback() {
@@ -85,10 +114,9 @@ class LaunchDetail extends PureComponent {
       const launchDate = moment(launch.launch_date_local).format('LLLL');
 
       return (
-        <LaunchWrapper backdrop={headerImg}>
-          <Backdrop />
+        <LaunchWrapper>
           <BackLink to="/">
-            <ArrowLeft size="40" />
+            <ArrowLeft size="30" />
           </BackLink>
           <LaunchInfo>
             <PosterDetail src={image} alt={rocketName} />
@@ -157,7 +185,6 @@ class LaunchDetail extends PureComponent {
               </DetailsSection>
             </DetailsWrapper>
           </LaunchInfo>
-          <Footerino />
         </LaunchWrapper>
       );
     }
@@ -183,6 +210,7 @@ const LoadingStyled = styled(Loading)`
   margin: 0;
   height: 100%;
   position: relative;
+  color: var(--white);
   > span {
     position: absolute;
     top: 50%;
@@ -194,51 +222,47 @@ const LoadingStyled = styled(Loading)`
 const LaunchWrapper = styled.div`
   font-size: 20px;
   position: relative;
-  padding-top: 14em;
-`;
-
-const Backdrop = styled.div`
-  background: red;
-  background: URL(${headerImg}) no-repeat;
-  background-size: cover;
-  background-position: center bottom;
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 15.5em;
-  width: 100%;
-  z-index: -1000;
+  @media (max-width: 700px) {
+    margin-bottom: 4em;
+  }
 `;
 
 const BackLink = styled(Link)`
+  box-sizing: border-box;
   position: absolute;
-  top: 0;
+  top: -${wrapperHeight}rem;
   left: 0;
-  margin: 0.25em;
-  padding: 0.5em;
-  font-size: 2em;
-  color: white;
+  padding: ${wrapperHeight / 4}rem;
+  color: var(--white);
   text-decoration: none;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 `;
 
 const LaunchInfo = styled.div`
-  background-color: #f2f5f5;
   padding: 1.5em 15% 4em 15%;
   text-align: left;
   display: flex;
-  box-shadow: 0 -5px 10px 0 rgba(32, 63, 64, 0.2);
   img {
     position: relative;
     top: -5rem;
   }
-  p {
-    color: #203f40;
+  @media (max-width: 700px) {
+    padding: 0 1em 0 0em;
+    flex-direction: column;
+    font-size: 0.8em;
+    img {
+      margin: 0 auto;
+      margin-top: 1rem;
+      margin-bottom: -${wrapperHeight - 2}rem;
+    }
+    li {
+      grid-template-columns: 9em 1fr;
+    }
   }
 `;
 
 const DetailsWrapper = styled.div`
-  margin-left: 3em;
+  margin-left: 2em;
   display: flex;
   flex-direction: column;
 `;
@@ -246,23 +270,22 @@ const DetailsWrapper = styled.div`
 const MainHeader = styled.h1`
   font-family: 'Unica One', sans-serif;
   font-weight: 400;
-  color: #a6110f;
+  color: var(--red);
   font-size: 46px;
   margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 `;
 
 const DetailsSection = styled.ul`
   font-family: 'Roboto Slab', serif;
   margin-top: 0.25em;
   padding-left: 1.5em;
-  box-shadow: -2px 0 0px 0px #01a2a6;
-  display: flex;
-  flex-direction: column;
+  box-shadow: -2px 0 0px 0px var(--teal);
+  display: grid;
+  grid-row-gap: 0.8em;
   will-change: box-shadow;
   transition: box-shadow ${transitionMs} ${transitionFunc};
   &:hover {
-    box-shadow: -3px 0 0px 0px #01a2a6, 100px 0 100px -50px rgba(1, 162, 166, 0.08) inset;
+    box-shadow: -3px 0 0px 0px var(--teal), 100px 0 100px -50px rgba(1, 162, 166, 0.08) inset;
   }
   > ul {
     box-shadow: none;
@@ -277,8 +300,6 @@ const DetailsSection = styled.ul`
 
 const Li = styled.li`
   list-style: none;
-  padding: 0.75em 0;
-  height: 1em;
   display: grid;
   grid-template-columns: 11.25em 1fr;
 
@@ -294,12 +315,12 @@ const Li = styled.li`
   }
 
   span > a {
-    color: #01a2a6;
+    color: var(--teal);
     text-decoration: none;
     will-change: color;
     transition: color ${transitionMs} ${transitionFunc};
     &:hover {
-      color: #a6110f;
+      color: var(--red);
     }
   }
 `;
@@ -312,11 +333,4 @@ const SecondaryHeader = MainHeader.extend`
 const Description = styled.p`
   font-family: 'Roboto Slab', serif;
   margin: 1em 0 1em 1.5em;
-  font-size: 1em;
-`;
-
-const Footerino = styled.div`
-  height: 4.5em;
-  width: 100%;
-  background: #203f40;
 `;
