@@ -87,6 +87,20 @@ class App extends Component {
               </a>)
             </p>
             <p>
+              Built using the API maintained by{' '}
+              <a href="https://www.reddit.com/r/spacex/" target="_blank" rel="noopener noreferrer">
+                /r/spacex
+              </a>
+              {' on '}
+              <a
+                href="https://github.com/r-spacex/SpaceX-API"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub
+              </a>
+            </p>
+            <p>
               Made with love in 2018 by{' '}
               <a href="https://kuroikyu.com" target="_blank" rel="noopener noreferrer">
                 Kuroi Kyu
