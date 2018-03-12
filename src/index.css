@@ -2,8 +2,10 @@
 :root {
   --teal: #01a2a6;
   --red: #a70011;
-  --white: #f2f5f5;
+  --white: hsl(181, 1%, 92%);
   --wrapper-margin: 6px;
+  --header-font: "Unica One", sans-serif;
+  --body-font: "Roboto Slab", serif;
 }
 
 body {

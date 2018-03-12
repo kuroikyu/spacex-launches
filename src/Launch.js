@@ -5,11 +5,13 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 
+import NoBadgeSvg from './NoBadgeSvg';
+
 const Launch = ({ launch, type }) => {
   const rocketName = `${launch.rocket.second_stage.payloads[0].payload_id} ${
     launch.rocket.rocket_name
   }`;
-  const image = launch.links.mission_patch || 'http://i.imgur.com/eL73Iit.png';
+  const image = launch.links.mission_patch || '';
   let launchDate;
   if (launch.launch_date_local) {
     launchDate = moment(launch.launch_date_local).fromNow();
@@ -21,19 +23,17 @@ const Launch = ({ launch, type }) => {
     launch,
   };
 
-  const emoji = type === 'past' ? '📆' : '⏱';
-
   return (
     <Link to={linkProps} className="Launch-link">
       <LaunchWrapper>
-        <Poster src={image} alt={rocketName} />
-        <RocketDesc>
-          {'🚀 '}
-          <strong>{launch.flight_number}</strong>
-          {` ${launch.rocket.second_stage.payloads[0].payload_id} `}
-          <em>{launch.rocket.rocket_name}</em>
-        </RocketDesc>
-        <LaunchTime>{`${emoji} ${launchDate}`}</LaunchTime>
+        {image ? <StyledPoster src={image} alt={rocketName} /> : <NoBadgeSvg />}
+        <div>
+          <RocketDesc>
+            <Light style={{ marginRight: '0.5em' }}>{launch.flight_number}</Light>
+            {rocketName}
+          </RocketDesc>
+          <Light>{launchDate}</Light>
+        </div>
       </LaunchWrapper>
     </Link>
   );
@@ -55,6 +55,12 @@ export const Poster = styled.img`
   height: auto;
 `;
 
+const StyledPoster = Poster.extend`
+  filter: drop-shadow(0 4px 6px rgba(32, 63, 64, 0.2));
+  will-change: filter, transform;
+  transition: all 150ms ease;
+`;
+
 const LaunchWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -65,9 +71,22 @@ const LaunchWrapper = styled.div`
   padding: 1rem 0;
   border-radius: 3px;
   transition: all 150ms ease-in-out;
+  div {
+    transition: all 150ms ease-in-out;
+    margin-left: -1.5em;
+    padding-left: 1.5em;
+  }
   &:hover {
-    background: #eee;
-    box-shadow: 0 10px 15px -10px #555;
+    div {
+      box-shadow: -3px 0 0px 0px var(--teal), 100px 0 100px -50px rgba(1, 162, 166, 0.08) inset;
+    }
+    span {
+      color: var(--teal) !important;
+    }
+    ${StyledPoster}, svg {
+      transform: translateY(-1px);
+      filter: drop-shadow(0 7px 10px rgba(32, 63, 64, 0.2));
+    }
   }
 `;
 
@@ -76,7 +95,7 @@ const RocketDesc = styled.p`
   margin-bottom: 0;
 `;
 
-const LaunchTime = styled.p`
-  margin-top: 0.5rem;
-  margin-bottom: 0;
+const Light = styled.span`
+  transition: all 150ms ease;
+  color: hsla(181, 25%, 36.1%, 0.6);
 `;

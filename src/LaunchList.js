@@ -23,8 +23,23 @@ export default class LaunchList extends PureComponent {
 }
 
 const LaunchGrid = styled.div`
+  font-family: var(--body-font);
   display: grid;
-  padding: 1rem;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 1rem;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 2em;
+  margin: 0 9em;
+
+  @media (max-width: 1400px) {
+    grid-template-columns: repeat(4, 1fr);
+    margin: 0 7em;
+  }
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1em;
+    margin: 0 4em;
+  }
+  @media (max-width: 700px) {
+    grid-template-columns: repeat(2, 1fr);
+    margin: 0 2em;
+  }
 `;

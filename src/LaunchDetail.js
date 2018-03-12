@@ -11,6 +11,7 @@ import { TrueOrFalse, Loading } from './helpers';
 
 // other data like images and json files
 import spacexLogo from './data/spacexlogo.png';
+import NoBadgeSvg from './NoBadgeSvg';
 
 const transitionMs = '0.15s';
 const transitionFunc = 'ease';
@@ -107,7 +108,7 @@ class LaunchDetail extends PureComponent {
   render() {
     if (this.state.launch) {
       const { launch } = this.state;
-      const image = launch.links.mission_patch || spacexLogo;
+      const image = launch.links.mission_patch || '';
       const rocketName = `${launch.rocket.second_stage.payloads[0].payload_id} ${
         launch.rocket.rocket_name
       }`;
@@ -119,7 +120,8 @@ class LaunchDetail extends PureComponent {
             <ArrowLeft size="30" />
           </BackLink>
           <LaunchInfo>
-            <PosterDetail src={image} alt={rocketName} />
+            {image ? <PosterDetail src={image} alt={rocketName} /> : <NoBadgeSvg />}
+            {/* <PosterDetail src={image} alt={rocketName} /> */}
             <DetailsWrapper>
               <MainHeader>{rocketName}</MainHeader>
               <Description>{launch.details}</Description>
@@ -242,9 +244,19 @@ const LaunchInfo = styled.div`
   padding: 1.5em 15% 4em 15%;
   text-align: left;
   display: flex;
-  img {
+  img,
+  #elp-badge {
     position: relative;
     top: -5rem;
+  }
+  #elp-badge {
+    height: 200px;
+    margin: 0;
+    font-size: 0.8em;
+    &:hover {
+      transform: translateY(-1px);
+      filter: drop-shadow(0 7px 10px rgba(32, 63, 64, 0.2));
+    }
   }
   @media (max-width: 700px) {
     padding: 0 1em 0 0em;
