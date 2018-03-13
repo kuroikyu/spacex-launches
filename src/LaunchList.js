@@ -40,6 +40,10 @@ const LaunchGrid = styled.div`
   }
   @media (max-width: 700px) {
     grid-template-columns: repeat(2, 1fr);
+    margin: 0 0.5em;
+  }
+  @media (max-width: 374px) {
+    grid-template-columns: repeat(1, 1fr);
     margin: 0 2em;
   }
 `;

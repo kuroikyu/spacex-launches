@@ -10,7 +10,6 @@ import { Poster } from './Launch';
 import { TrueOrFalse, Loading } from './helpers';
 
 // other data like images and json files
-import spacexLogo from './data/spacexlogo.png';
 import NoBadgeSvg from './NoBadgeSvg';
 
 const transitionMs = '0.15s';
@@ -121,7 +120,6 @@ class LaunchDetail extends PureComponent {
           </BackLink>
           <LaunchInfo>
             {image ? <PosterDetail src={image} alt={rocketName} /> : <NoBadgeSvg />}
-            {/* <PosterDetail src={image} alt={rocketName} /> */}
             <DetailsWrapper>
               <MainHeader>{rocketName}</MainHeader>
               <Description>{launch.details}</Description>
@@ -206,6 +204,9 @@ const PosterDetail = Poster.extend`
     transform: translateY(-1px);
     filter: drop-shadow(0 7px 10px rgba(32, 63, 64, 0.2));
   }
+  @media (max-width: 700px) {
+    height: 100px;
+  }
 `;
 
 const LoadingStyled = styled(Loading)`
@@ -244,13 +245,19 @@ const LaunchInfo = styled.div`
   padding: 1.5em 15% 4em 15%;
   text-align: left;
   display: flex;
+
   img,
   #elp-badge {
     position: relative;
     top: -5rem;
-  }
-  #elp-badge {
     height: 200px;
+    @media (max-width: 700px) {
+      height: 150px;
+      top: -3em;
+    }
+  }
+
+  #elp-badge {
     margin: 0;
     font-size: 0.8em;
     &:hover {
@@ -258,17 +265,23 @@ const LaunchInfo = styled.div`
       filter: drop-shadow(0 7px 10px rgba(32, 63, 64, 0.2));
     }
   }
+
   @media (max-width: 700px) {
     padding: 0 1em 0 0em;
     flex-direction: column;
     font-size: 0.8em;
+
     img {
       margin: 0 auto;
       margin-top: 1rem;
       margin-bottom: -${wrapperHeight - 2}rem;
     }
+
     li {
       grid-template-columns: 9em 1fr;
+    }
+    h1 {
+      margin-top: 0.5em;
     }
   }
 `;
