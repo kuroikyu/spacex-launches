@@ -51,14 +51,9 @@ class App extends Component {
     console.log('Render App');
 
     return (
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <MainContainer>
           <AppWrapper className="App">
-            {/* <header className="App-header">
-            <Link to="/">
-              <img src={spacexlogo} className="App-logo" alt="SpaceX logo" />
-            </Link>
-          </header> */}
             <Switch>
               <Route
                 exact
