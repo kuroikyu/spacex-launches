@@ -5,12 +5,13 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import ArrowLeft from 'react-feather/dist/icons/arrow-left';
+import Overdrive from 'react-overdrive';
 
 import { Poster } from './Launch';
 import { TrueOrFalse, Loading } from './helpers';
 
 // other data like images and json files
-import NoBadgeSvg from './NoBadgeSvg';
+import NoBadge from './temp-badge.png';
 
 const transitionMs = '0.15s';
 const transitionFunc = 'ease';
@@ -98,7 +99,7 @@ class LaunchDetail extends PureComponent {
     const { params } = this.props.match;
     const isUpcoming = params.folder === 'upcoming' ? params.folder : '';
     const response = await (await fetch(
-      `https://api.spacexdata.com/v2/launches/${isUpcoming}/?flight_number=${params.launchId}`,
+      `https://api.spacexdata.com/v2/launches/${isUpcoming}/?flight_number=${params.launchId}`
     )).json();
     console.log('Query to Spacex API');
     return response[0];
@@ -119,7 +120,9 @@ class LaunchDetail extends PureComponent {
             <ArrowLeft size="30" />
           </BackLink>
           <LaunchInfo>
-            {image ? <PosterDetail src={image} alt={rocketName} /> : <NoBadgeSvg />}
+            <Overdrive id={`${rocketName}-image`} animationDelay={1}>
+              <PosterDetail src={image || NoBadge} alt={rocketName} />
+            </Overdrive>
             <DetailsWrapper>
               <MainHeader>{rocketName}</MainHeader>
               <Description>{launch.details}</Description>

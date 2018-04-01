@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import Overdrive from 'react-overdrive';
 
-import NoBadgeSvg from './NoBadgeSvg';
+import NoBadge from './temp-badge.png';
 
 const Launch = ({ launch, type }) => {
   const rocketName = `${launch.rocket.second_stage.payloads[0].payload_id} ${
@@ -26,14 +27,16 @@ const Launch = ({ launch, type }) => {
   return (
     <Link to={linkProps} className="Launch-link">
       <LaunchWrapper>
-        {image ? <StyledPoster src={image} alt={rocketName} /> : <NoBadgeSvg />}
-        <div>
+        <Overdrive id={`${rocketName}-image`} animationDelay={1}>
+          <StyledPoster src={image || NoBadge} alt={rocketName} />
+        </Overdrive>
+        <DetailsWrapper>
           <RocketDesc>
             <Light style={{ marginRight: '0.5em' }}>{launch.flight_number}</Light>
             {rocketName}
           </RocketDesc>
           <Light>{launchDate}</Light>
-        </div>
+        </DetailsWrapper>
       </LaunchWrapper>
     </Link>
   );
@@ -61,6 +64,11 @@ const StyledPoster = Poster.extend`
   transition: all 150ms ease;
 `;
 
+const DetailsWrapper = styled.div`
+  margin-top: 0.5rem;
+  padding: 1em 0;
+`;
+
 const LaunchWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -77,13 +85,13 @@ const LaunchWrapper = styled.div`
     padding-left: 1.5em;
   }
   &:hover {
-    div {
+    ${DetailsWrapper} {
       box-shadow: -3px 0 0px 0px var(--teal), 100px 0 100px -50px rgba(1, 162, 166, 0.08) inset;
     }
     span {
       color: var(--teal) !important;
     }
-    ${StyledPoster}, svg {
+    ${StyledPoster} {
       transform: translateY(-1px);
       filter: drop-shadow(0 7px 10px rgba(32, 63, 64, 0.2));
     }
@@ -91,7 +99,7 @@ const LaunchWrapper = styled.div`
 `;
 
 const RocketDesc = styled.p`
-  margin-top: 1.5rem;
+  margin-top: 0;
   margin-bottom: 0;
 `;
 
