@@ -120,9 +120,9 @@ class LaunchDetail extends PureComponent {
             <ArrowLeft size="30" />
           </BackLink>
           <LaunchInfo>
-            <Overdrive id={`${rocketName}-image`} animationDelay={1}>
+            <StyledOverdrive id={`${rocketName}-image`} animationDelay={1}>
               <PosterDetail src={image || NoBadge} alt={rocketName} />
-            </Overdrive>
+            </StyledOverdrive>
             <DetailsWrapper>
               <MainHeader>{rocketName}</MainHeader>
               <Description>{launch.details}</Description>
@@ -209,6 +209,12 @@ const PosterDetail = Poster.extend`
   }
   @media (max-width: 700px) {
     height: 100px;
+  }
+`;
+
+const StyledOverdrive = styled(Overdrive)`
+  @media (max-width: 700px) {
+    display: flex;
   }
 `;
 
