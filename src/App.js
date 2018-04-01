@@ -39,16 +39,15 @@ class App extends Component {
   }
 
   fetchFromAPI = async (URI, reverse) => {
-    console.log('Query to Spacex API');
+    console.log(`Query to Spacex API: ${URI}`);
     const launches = await (await fetch(URI)).json();
     const sorted = reverse ? launches.sort((a, b) => b.flight_number - a.flight_number) : launches;
     return sorted;
   };
 
   render() {
-    const { futureLaunches, pastLaunches } = this.state;
-
     console.log('Render App');
+    const { futureLaunches, pastLaunches } = this.state;
 
     return (
       <Router basename={process.env.PUBLIC_URL}>
