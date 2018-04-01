@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Launch from './Launch';
+import LoadingHOC from './HOC/LoadingHOC';
 
-export default class LaunchList extends PureComponent {
+class LaunchList extends PureComponent {
   static propTypes = {
     launches: PropTypes.array.isRequired,
     type: PropTypes.string.isRequired,
@@ -47,3 +48,5 @@ const LaunchGrid = styled.div`
     margin: 0 2em;
   }
 `;
+
+export default LoadingHOC(LaunchList);
