@@ -4,20 +4,24 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Launch from './Launch';
+import Loading from './Loading';
 
-export default class LaunchList extends PureComponent {
+class LaunchList extends PureComponent {
   static propTypes = {
     launches: PropTypes.array.isRequired,
     type: PropTypes.string.isRequired,
   };
 
   render() {
+    const { launches, type } = this.props;
     return (
-      <LaunchGrid>
-        {this.props.launches.map(launch => (
-          <Launch key={launch.flight_number} launch={launch} type={this.props.type} />
-        ))}
-      </LaunchGrid>
+      <Loading loading={launches && !launches.length}>
+        <LaunchGrid>
+          {launches.map(launch => (
+            <Launch key={launch.flight_number} launch={launch} type={type} />
+          ))}
+        </LaunchGrid>
+      </Loading>
     );
   }
 }
@@ -47,3 +51,5 @@ const LaunchGrid = styled.div`
     margin: 0 2em;
   }
 `;
+
+export default LaunchList;
