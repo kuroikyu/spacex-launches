@@ -54,8 +54,25 @@ Launch.defaultProps = {};
 export default Launch;
 
 export const Poster = styled.img`
-  width: 50%;
   height: auto;
+  width: 65%;
+  max-width: 200px;
+
+  @media (max-width: 1400px) {
+    grid-template-columns: repeat(4, 1fr);
+    width: 14vw;
+  }
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 700px) {
+    grid-template-columns: repeat(2, 1fr);
+    width: 25vw;
+  }
+  @media (max-width: 374px) {
+    grid-template-columns: repeat(1, 1fr);
+    width: 45vw;
+  }
 `;
 
 const StyledPoster = Poster.extend`
@@ -79,6 +96,7 @@ const LaunchWrapper = styled.div`
   padding: 1rem 0;
   border-radius: 3px;
   transition: all 150ms ease-in-out;
+
   div {
     transition: all 150ms ease-in-out;
     margin-left: -1.5em;
