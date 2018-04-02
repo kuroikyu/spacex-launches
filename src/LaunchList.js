@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Launch from './Launch';
-import LoadingHOC from './HOC/LoadingHOC';
+import Loading from './Loading';
 
 class LaunchList extends PureComponent {
   static propTypes = {
@@ -13,12 +13,15 @@ class LaunchList extends PureComponent {
   };
 
   render() {
+    const { launches, type } = this.props;
     return (
-      <LaunchGrid>
-        {this.props.launches.map(launch => (
-          <Launch key={launch.flight_number} launch={launch} type={this.props.type} />
-        ))}
-      </LaunchGrid>
+      <Loading loading={launches && !launches.length}>
+        <LaunchGrid>
+          {launches.map(launch => (
+            <Launch key={launch.flight_number} launch={launch} type={type} />
+          ))}
+        </LaunchGrid>
+      </Loading>
     );
   }
 }
@@ -49,4 +52,4 @@ const LaunchGrid = styled.div`
   }
 `;
 
-export default LoadingHOC(LaunchList);
+export default LaunchList;
