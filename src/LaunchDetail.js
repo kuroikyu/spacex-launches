@@ -38,7 +38,7 @@ const ListedAnchor = ({ name, value }) => (
     <span>{name}</span>
     <span>
       {value && (
-        <a href={value} target="_blank" rel="nofollow">
+        <a href={value} target="_blank" rel="noopener noreferrer">
           Link
         </a>
       )}
@@ -54,9 +54,10 @@ ListedAnchor.defaultProps = LiDefaultProps;
 class LaunchDetail extends PureComponent {
   static propTypes = {
     launches: PropTypes.array,
+    match: PropTypes.object,
   };
 
-  static defaultProps = { launches: [] };
+  static defaultProps = { launches: [], match: {} };
 
   state = {
     launch: undefined,
@@ -71,9 +72,12 @@ class LaunchDetail extends PureComponent {
     document.documentElement.style.setProperty('--wrapper-margin', `${wrapperHeight}em`);
 
     // Capture flight info from props or fetch it from API
-    const { params } = this.props.match;
+    const {
+      launches,
+      match: { params },
+    } = this.props;
     const launch =
-      this.props.launches.filter(el => el.flight_number === parseInt(params.launchId, 10))[0] ||
+      launches.filter(el => el.flight_number === parseInt(params.launchId, 10))[0] ||
       (await this.APIFallback());
 
     this.setState({ launch });
@@ -81,6 +85,7 @@ class LaunchDetail extends PureComponent {
 
   componentWillUnmount() {
     // Decrease wrapper's height
+    // eslint-disable-next-line react/destructuring-assignment
     document.documentElement.style.setProperty('--wrapper-margin', this.state.originalMargin);
   }
 
@@ -96,7 +101,9 @@ class LaunchDetail extends PureComponent {
   }
 
   async APIFallback() {
-    const { params } = this.props.match;
+    const {
+      match: { params },
+    } = this.props;
     const isUpcoming = params.folder === 'upcoming' ? params.folder : '';
     const response = await (await fetch(
       `https://api.spacexdata.com/v2/launches/${isUpcoming}/?flight_number=${params.launchId}`
@@ -106,6 +113,7 @@ class LaunchDetail extends PureComponent {
   }
 
   render() {
+    // eslint-disable-next-line react/destructuring-assignment
     if (this.state.launch) {
       const { launch } = this.state;
       const image = launch.links.mission_patch || '';
