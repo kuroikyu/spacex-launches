@@ -1,7 +1,16 @@
 {
-  "main.css": "static/css/main.f4dc71e9.css",
-  "main.css.map": "static/css/main.f4dc71e9.css.map",
-  "main.js": "static/js/main.6d303f01.js",
-  "main.js.map": "static/js/main.6d303f01.js.map",
-  "static/media/temp-badge.png": "static/media/temp-badge.ed7e527a.png"
+  "main.css": "/spacex-launches/static/css/main.5a689ae6.chunk.css",
+  "main.js": "/spacex-launches/static/js/main.4107770d.chunk.js",
+  "main.js.map": "/spacex-launches/static/js/main.4107770d.chunk.js.map",
+  "static/css/1.100a7594.chunk.css": "/spacex-launches/static/css/1.100a7594.chunk.css",
+  "static/js/1.c287a2d0.chunk.js": "/spacex-launches/static/js/1.c287a2d0.chunk.js",
+  "static/js/1.c287a2d0.chunk.js.map": "/spacex-launches/static/js/1.c287a2d0.chunk.js.map",
+  "runtime~main.js": "/spacex-launches/static/js/runtime~main.ac122b97.js",
+  "runtime~main.js.map": "/spacex-launches/static/js/runtime~main.ac122b97.js.map",
+  "static/media/temp-badge.png": "/spacex-launches/static/media/temp-badge.ed7e527a.png",
+  "static/css/main.5a689ae6.chunk.css.map": "/spacex-launches/static/css/main.5a689ae6.chunk.css.map",
+  "static/css/1.100a7594.chunk.css.map": "/spacex-launches/static/css/1.100a7594.chunk.css.map",
+  "index.html": "/spacex-launches/index.html",
+  "precache-manifest.c8a103d1f2a39b4a42a3b06ad7d20564.js": "/spacex-launches/precache-manifest.c8a103d1f2a39b4a42a3b06ad7d20564.js",
+  "service-worker.js": "/spacex-launches/service-worker.js"
 }
