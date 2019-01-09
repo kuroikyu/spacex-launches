@@ -1,6 +1,6 @@
 {
   "name": "spacex-launches",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "homepage": "https://kuroikyu.com/spacex-launches",
   "dependencies": {
@@ -32,5 +32,10 @@
     "gh-pages": "^2.0.1",
     "prettier": "^1.15.3"
   },
-  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"]
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
