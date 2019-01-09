@@ -104,9 +104,9 @@ class LaunchDetail extends PureComponent {
     const {
       match: { params },
     } = this.props;
-    const isUpcoming = params.folder === 'upcoming' ? params.folder : '';
+    const isUpcoming = params.folder === 'upcoming' ? `${params.folder}/` : '';
     const response = await (await fetch(
-      `https://api.spacexdata.com/v2/launches/${isUpcoming}/?flight_number=${params.launchId}`
+      `https://api.spacexdata.com/v2/launches/${isUpcoming}?flight_number=${params.launchId}`
     )).json();
     console.log('Query to Spacex API');
     return response[0];
@@ -206,17 +206,14 @@ class LaunchDetail extends PureComponent {
 export default LaunchDetail;
 
 const PosterDetail = Poster.extend`
-  height: 200px;
-  width: auto;
+  width: 300px;
+  height: auto;
   filter: drop-shadow(0 4px 6px rgba(32, 63, 64, 0.2));
   will-change: filter, transform;
   transition: all ${transitionMs} ${transitionFunc};
   &:hover {
     transform: translateY(-1px);
     filter: drop-shadow(0 7px 10px rgba(32, 63, 64, 0.2));
-  }
-  @media (max-width: 700px) {
-    height: 100px;
   }
 `;
 
@@ -266,10 +263,9 @@ const LaunchInfo = styled.div`
   img,
   #elp-badge {
     position: relative;
-    top: -5rem;
-    height: 200px;
     @media (max-width: 700px) {
-      height: 150px;
+      width: 150px;
+      height: auto;
       top: -3em;
     }
   }
