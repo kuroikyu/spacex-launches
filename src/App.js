@@ -78,7 +78,8 @@ class App extends Component {
               All data and images are property of Space Exploration Technologies Corporation (
               <a href="https://spacex.com" target="_blank" rel="noopener noreferrer">
                 SpaceX
-              </a>)
+              </a>
+              )
             </p>
             <p>
               Built using the API maintained by{' '}

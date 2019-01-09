@@ -38,7 +38,7 @@ const ListedAnchor = ({ name, value }) => (
     <span>{name}</span>
     <span>
       {value && (
-        <a href={value} target="_blank" rel="nofollow">
+        <a href={value} target="_blank" rel="noopener noreferrer">
           Link
         </a>
       )}
@@ -54,9 +54,10 @@ ListedAnchor.defaultProps = LiDefaultProps;
 class LaunchDetail extends PureComponent {
   static propTypes = {
     launches: PropTypes.array,
+    match: PropTypes.object,
   };
 
-  static defaultProps = { launches: [] };
+  static defaultProps = { launches: [], match: {} };
 
   state = {
     launch: undefined,
@@ -71,9 +72,12 @@ class LaunchDetail extends PureComponent {
     document.documentElement.style.setProperty('--wrapper-margin', `${wrapperHeight}em`);
 
     // Capture flight info from props or fetch it from API
-    const { params } = this.props.match;
+    const {
+      launches,
+      match: { params },
+    } = this.props;
     const launch =
-      this.props.launches.filter(el => el.flight_number === parseInt(params.launchId, 10))[0] ||
+      launches.filter(el => el.flight_number === parseInt(params.launchId, 10))[0] ||
       (await this.APIFallback());
 
     this.setState({ launch });
@@ -81,6 +85,7 @@ class LaunchDetail extends PureComponent {
 
   componentWillUnmount() {
     // Decrease wrapper's height
+    // eslint-disable-next-line react/destructuring-assignment
     document.documentElement.style.setProperty('--wrapper-margin', this.state.originalMargin);
   }
 
@@ -96,16 +101,19 @@ class LaunchDetail extends PureComponent {
   }
 
   async APIFallback() {
-    const { params } = this.props.match;
-    const isUpcoming = params.folder === 'upcoming' ? params.folder : '';
+    const {
+      match: { params },
+    } = this.props;
+    const isUpcoming = params.folder === 'upcoming' ? `${params.folder}/` : '';
     const response = await (await fetch(
-      `https://api.spacexdata.com/v2/launches/${isUpcoming}/?flight_number=${params.launchId}`
+      `https://api.spacexdata.com/v2/launches/${isUpcoming}?flight_number=${params.launchId}`
     )).json();
     console.log('Query to Spacex API');
     return response[0];
   }
 
   render() {
+    // eslint-disable-next-line react/destructuring-assignment
     if (this.state.launch) {
       const { launch } = this.state;
       const image = launch.links.mission_patch || '';
@@ -198,17 +206,14 @@ class LaunchDetail extends PureComponent {
 export default LaunchDetail;
 
 const PosterDetail = Poster.extend`
-  height: 200px;
-  width: auto;
+  width: 300px;
+  height: auto;
   filter: drop-shadow(0 4px 6px rgba(32, 63, 64, 0.2));
   will-change: filter, transform;
   transition: all ${transitionMs} ${transitionFunc};
   &:hover {
     transform: translateY(-1px);
     filter: drop-shadow(0 7px 10px rgba(32, 63, 64, 0.2));
-  }
-  @media (max-width: 700px) {
-    height: 100px;
   }
 `;
 
@@ -258,10 +263,9 @@ const LaunchInfo = styled.div`
   img,
   #elp-badge {
     position: relative;
-    top: -5rem;
-    height: 200px;
     @media (max-width: 700px) {
-      height: 150px;
+      width: 150px;
+      height: auto;
       top: -3em;
     }
   }
