@@ -155,7 +155,8 @@ class LaunchDetail extends PureComponent {
                     <ListedItem name="Flights" value={stage.flight} />
                     <ListedItem name="Block" value={stage.block} />
                     <ListedItem name="Reused" value={TrueOrFalse(stage.reused)} />
-                    <ListedItem name="Land Success" value={TrueOrFalse(stage.landing_success)} />
+                    <ListedItem name="Land Success" value={TrueOrFalse(stage.land_success)} />
+                    <ListedItem name="Landing Intent" value={TrueOrFalse(stage.landing_intent)} />
                     <ListedItem name="Landing Type" value={stage.landing_type} />
                     <ListedItem name="Landing Vehicle" value={stage.landing_vehicle} />
                   </DetailsSection>
